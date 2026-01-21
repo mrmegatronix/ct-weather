@@ -1,47 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Christchurch Weather Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>
-      body {
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        background-color: #050505;
-        overflow: hidden;
-        color: #ffffff;
-      }
-      h1, h2, h3, h4, .font-heading { font-family: 'Oswald', sans-serif; }
-      ::-webkit-scrollbar { display: none; }
-      
-      @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
-      @keyframes float-sway { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(3px, -5px); } }
-      @keyframes rain-fall { 0% { transform: translateY(-4px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(8px); opacity: 0; } }
-      @keyframes flash { 0%, 100% { opacity: 1; } 5% { opacity: 0.3; } 10% { opacity: 1; } 15% { opacity: 1; } 20% { opacity: 0.3; } 25% { opacity: 1; } }
-      @keyframes progress { from { width: 0%; } to { width: 100%; } }
-      @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-      @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-      @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-      .animate-spin-slow { animation: spin-slow 12s linear infinite; transform-origin: center; }
-      .animate-float { animation: float 4s ease-in-out infinite; }
-      .animate-float-sway { animation: float-sway 5s ease-in-out infinite; }
-      .animate-rain { animation: rain-fall 1.2s linear infinite; }
-      .animate-flash { animation: flash 3s ease-in-out infinite; }
-      .animate-progress { animation: progress 60s linear infinite; }
-      .animate-fade-in-down { animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-      .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-      .animate-scale-in { animation: scaleIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-      .opacity-0-start { opacity: 0; }
-    </style>
-    <script type="importmap">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Christchurch Weather Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #050505;
+      overflow: hidden;
+      color: #ffffff;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-heading {
+      font-family: 'Oswald', sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    @keyframes spin-slow {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    @keyframes float-sway {
+
+      0%,
+      100% {
+        transform: translate(0px, 0px);
+      }
+
+      50% {
+        transform: translate(3px, -5px);
+      }
+    }
+
+    @keyframes rain-fall {
+      0% {
+        transform: translateY(-4px);
+        opacity: 0;
+      }
+
+      30% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(8px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flash {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      5% {
+        opacity: 0.3;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      20% {
+        opacity: 0.3;
+      }
+
+      25% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes progress {
+      from {
+        width: 0%;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .animate-spin-slow {
+      animation: spin-slow 12s linear infinite;
+      transform-origin: center;
+    }
+
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .animate-float-sway {
+      animation: float-sway 5s ease-in-out infinite;
+    }
+
+    .animate-rain {
+      animation: rain-fall 1.2s linear infinite;
+    }
+
+    .animate-flash {
+      animation: flash 3s ease-in-out infinite;
+    }
+
+    .animate-progress {
+      animation: progress 60s linear infinite;
+    }
+
+    .animate-fade-in-down {
+      animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .animate-scale-in {
+      animation: scaleIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .opacity-0-start {
+      opacity: 0;
+    }
+  </style>
+  <script type="importmap">
 {
   "imports": {
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
@@ -53,199 +210,202 @@
   }
 }
 </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="text/babel" data-presets="react" data-type="module">
-      import React, { useEffect, useState, useRef } from 'react';
-      import ReactDOM from 'react-dom/client';
-      import { Wind, CloudRain, Sunrise, Sunset as SunsetIcon, Droplets, Navigation } from 'lucide-react';
+  <link rel="stylesheet" href="/index.css">
+</head>
 
-      const CHRISTCHURCH_COORDS = { lat: -43.5321, lon: 172.6362 };
-      const REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react" data-type="module">
+    import React, { useEffect, useState, useRef } from 'react';
+    import ReactDOM from 'react-dom/client';
+    import { Wind, CloudRain, Sunrise, Sunset as SunsetIcon, Droplets, Navigation } from 'lucide-react';
 
-      const fetchWeatherData = async () => {
-        const params = new URLSearchParams({
-          latitude: CHRISTCHURCH_COORDS.lat,
-          longitude: CHRISTCHURCH_COORDS.lon,
-          current: 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m',
-          daily: 'weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,rain_sum',
-          timezone: 'Pacific/Auckland',
-          forecast_days: 8
-        });
-        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
-        const data = await response.json();
-        return {
-          current: {
-            temperature: data.current.temperature_2m,
-            windSpeed: data.current.wind_speed_10m,
-            windDirection: data.current.wind_direction_10m,
-            weatherCode: data.current.weather_code,
-            isDay: data.current.is_day,
-            precipitation: data.current.precipitation
-          },
-          daily: data.daily
+    const CHRISTCHURCH_COORDS = { lat: -43.5321, lon: 172.6362 };
+    const REFRESH_INTERVAL_MS = 10 * 60 * 1000;
+
+    const fetchWeatherData = async () => {
+      const params = new URLSearchParams({
+        latitude: CHRISTCHURCH_COORDS.lat,
+        longitude: CHRISTCHURCH_COORDS.lon,
+        current: 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m',
+        daily: 'weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,rain_sum',
+        timezone: 'Pacific/Auckland',
+        forecast_days: 8
+      });
+      const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+      const data = await response.json();
+      return {
+        current: {
+          temperature: data.current.temperature_2m,
+          windSpeed: data.current.wind_speed_10m,
+          windDirection: data.current.wind_direction_10m,
+          weatherCode: data.current.weather_code,
+          isDay: data.current.is_day,
+          precipitation: data.current.precipitation
+        },
+        daily: data.daily
+      };
+    };
+
+    const getWeatherDescription = (code) => {
+      const codes = { 0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast', 45: 'Foggy', 48: 'Foggy', 51: 'Drizzle', 61: 'Rain', 65: 'Heavy Rain', 71: 'Snow', 95: 'Thunderstorm' };
+      return codes[code] || 'Mostly Cloudy';
+    };
+
+    const WeatherIcon = ({ code, isDay, className }) => {
+      if (code <= 1) return <Sun isDay={isDay} className={className} />;
+      if (code <= 3) return <Cloud className={className} />;
+      if (code >= 95) return <Thunder className={className} />;
+      if (code >= 51 && code <= 67) return <Rain className={className} />;
+      return <Cloud className={className} />;
+    };
+
+    const Sun = ({ className, isDay }) => isDay ? (
+      <svg className={`${className} animate-spin-slow`} viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2"><circle cx="12" cy="12" r="5" fill="#D4AF37" fillOpacity="0.2" /><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42m12.72-12.72l1.42-1.42" /></svg>
+    ) : (
+      <svg className={`${className} animate-float`} viewBox="0 0 24 24" fill="none" stroke="#E5E7EB" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#E5E7EB" fillOpacity="0.2" /></svg>
+    );
+
+    const Cloud = ({ className }) => (
+      <svg className={`${className} animate-float`} viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#9CA3AF" fillOpacity="0.2" /></svg>
+    );
+
+    const Rain = ({ className }) => (
+      <svg className={`${className}`} viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="2">
+        <path d="M19 14l-2.5 2.5" className="animate-rain" style={{ animationDelay: '0s' }} /><path d="M14 15l-2.5 2.5" className="animate-rain" style={{ animationDelay: '0.4s' }} /><path d="M9 14l-2.5 2.5" className="animate-rain" style={{ animationDelay: '0.8s' }} />
+        <path d="M17.4 8.6A7 7 0 1 0 5 15h13.4" stroke="#9CA3AF" className="animate-float" />
+      </svg>
+    );
+
+    const Thunder = ({ className }) => (
+      <svg className={`${className} animate-float`} viewBox="0 0 24 24" fill="none" stroke="#FBBF24" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#FBBF24" fillOpacity="0.4" className="animate-flash" /></svg>
+    );
+
+    const WeatherBackground = ({ weatherCode, isDay, sunrise, sunset }) => {
+      const canvasRef = useRef(null);
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let frame;
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+        window.addEventListener('resize', resize);
+        resize();
+
+        const particles = Array.from({ length: 150 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, speed: Math.random() * 2 + 1, size: Math.random() * 2 }));
+
+        const draw = () => {
+          const grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+          if (isDay) { grd.addColorStop(0, '#1565C0'); grd.addColorStop(1, '#90CAF9'); }
+          else { grd.addColorStop(0, '#0D1117'); grd.addColorStop(1, '#311B92'); }
+          ctx.fillStyle = grd;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          particles.forEach(p => {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+            p.y = (p.y + p.speed) % canvas.height;
+          });
+          frame = requestAnimationFrame(draw);
         };
-      };
+        draw();
+        return () => { cancelAnimationFrame(frame); window.removeEventListener('resize', resize); };
+      }, [weatherCode, isDay]);
+      return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+    };
 
-      const getWeatherDescription = (code) => {
-        const codes = { 0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast', 45: 'Foggy', 48: 'Foggy', 51: 'Drizzle', 61: 'Rain', 65: 'Heavy Rain', 71: 'Snow', 95: 'Thunderstorm' };
-        return codes[code] || 'Mostly Cloudy';
-      };
+    const App = () => {
+      const [data, setData] = useState(null);
+      const [time, setTime] = useState(new Date());
 
-      const WeatherIcon = ({ code, isDay, className }) => {
-        if (code <= 1) return <Sun isDay={isDay} className={className} />;
-        if (code <= 3) return <Cloud className={className} />;
-        if (code >= 95) return <Thunder className={className} />;
-        if (code >= 51 && code <= 67) return <Rain className={className} />;
-        return <Cloud className={className} />;
-      };
+      useEffect(() => {
+        const load = async () => setData(await fetchWeatherData());
+        load();
+        const refresh = setInterval(load, REFRESH_INTERVAL_MS);
+        const ticker = setInterval(() => setTime(new Date()), 1000);
+        return () => { clearInterval(refresh); clearInterval(ticker); };
+      }, []);
 
-      const Sun = ({ className, isDay }) => isDay ? (
-        <svg className={`${className} animate-spin-slow`} viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2"><circle cx="12" cy="12" r="5" fill="#D4AF37" fillOpacity="0.2" /><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42m12.72-12.72l1.42-1.42" /></svg>
-      ) : (
-        <svg className={`${className} animate-float`} viewBox="0 0 24 24" fill="none" stroke="#E5E7EB" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#E5E7EB" fillOpacity="0.2" /></svg>
-      );
+      if (!data) return <div className="h-screen w-screen flex items-center justify-center bg-black text-yellow-500 font-heading text-5xl animate-pulse">LOADING...</div>;
 
-      const Cloud = ({ className }) => (
-        <svg className={`${className} animate-float`} viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#9CA3AF" fillOpacity="0.2" /></svg>
-      );
+      const { current, daily } = data;
+      const showColon = time.getSeconds() % 2 === 0;
 
-      const Rain = ({ className }) => (
-        <svg className={`${className}`} viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="2">
-          <path d="M19 14l-2.5 2.5" className="animate-rain" style={{ animationDelay: '0s' }} /><path d="M14 15l-2.5 2.5" className="animate-rain" style={{ animationDelay: '0.4s' }} /><path d="M9 14l-2.5 2.5" className="animate-rain" style={{ animationDelay: '0.8s' }} />
-          <path d="M17.4 8.6A7 7 0 1 0 5 15h13.4" stroke="#9CA3AF" className="animate-float" />
-        </svg>
-      );
+      return (
+        <div className="relative h-screen w-screen text-white overflow-hidden bg-black font-sans">
+          <WeatherBackground weatherCode={current.weatherCode} isDay={current.isDay} sunrise={daily.sunrise[0]} sunset={daily.sunset[0]} />
+          <div className="relative z-10 h-full flex flex-col justify-between p-12">
+            <header className="flex justify-between items-start animate-fade-in-down">
+              <div>
+                <h1 className="text-7xl font-bold font-heading leading-none">CHRISTCHURCH</h1>
+                <h2 className="text-2xl text-[#D4AF37] font-semibold tracking-widest uppercase pl-1">New Zealand</h2>
+              </div>
+              <div className="text-right">
+                <div className="text-8xl font-bold font-heading leading-none flex items-baseline">
+                  {time.getHours().toString().padStart(2, '0')}
+                  <span className={showColon ? 'opacity-100' : 'opacity-0'}>:</span>
+                  {time.getMinutes().toString().padStart(2, '0')}
+                  <span className="text-4xl text-yellow-500 ml-4">{time.getHours() >= 12 ? 'PM' : 'AM'}</span>
+                </div>
+                <div className="text-2xl text-gray-300 mt-2">{time.toLocaleDateString('en-NZ', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+              </div>
+            </header>
 
-      const Thunder = ({ className }) => (
-        <svg className={`${className} animate-float`} viewBox="0 0 24 24" fill="none" stroke="#FBBF24" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#FBBF24" fillOpacity="0.4" className="animate-flash" /></svg>
-      );
-
-      const WeatherBackground = ({ weatherCode, isDay, sunrise, sunset }) => {
-        const canvasRef = useRef(null);
-        useEffect(() => {
-          const canvas = canvasRef.current;
-          const ctx = canvas.getContext('2d');
-          let frame;
-          const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-          window.addEventListener('resize', resize);
-          resize();
-
-          const particles = Array.from({ length: 150 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, speed: Math.random() * 2 + 1, size: Math.random() * 2 }));
-
-          const draw = () => {
-            const grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            if (isDay) { grd.addColorStop(0, '#1565C0'); grd.addColorStop(1, '#90CAF9'); }
-            else { grd.addColorStop(0, '#0D1117'); grd.addColorStop(1, '#311B92'); }
-            ctx.fillStyle = grd;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            particles.forEach(p => {
-              ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-              ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
-              p.y = (p.y + p.speed) % canvas.height;
-            });
-            frame = requestAnimationFrame(draw);
-          };
-          draw();
-          return () => { cancelAnimationFrame(frame); window.removeEventListener('resize', resize); };
-        }, [weatherCode, isDay]);
-        return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
-      };
-
-      const App = () => {
-        const [data, setData] = useState(null);
-        const [time, setTime] = useState(new Date());
-
-        useEffect(() => {
-          const load = async () => setData(await fetchWeatherData());
-          load();
-          const refresh = setInterval(load, REFRESH_INTERVAL_MS);
-          const ticker = setInterval(() => setTime(new Date()), 1000);
-          return () => { clearInterval(refresh); clearInterval(ticker); };
-        }, []);
-
-        if (!data) return <div className="h-screen w-screen flex items-center justify-center bg-black text-yellow-500 font-heading text-5xl animate-pulse">LOADING...</div>;
-
-        const { current, daily } = data;
-        const showColon = time.getSeconds() % 2 === 0;
-
-        return (
-          <div className="relative h-screen w-screen text-white overflow-hidden bg-black font-sans">
-            <WeatherBackground weatherCode={current.weatherCode} isDay={current.isDay} sunrise={daily.sunrise[0]} sunset={daily.sunset[0]} />
-            <div className="relative z-10 h-full flex flex-col justify-between p-12">
-              <header className="flex justify-between items-start animate-fade-in-down">
+            <main className="flex-1 flex flex-col justify-center items-center">
+              <div className="flex items-center gap-12 animate-scale-in">
+                <div className="w-56 h-56 drop-shadow-2xl">
+                  <WeatherIcon code={current.weatherCode} isDay={current.isDay} className="w-full h-full" />
+                </div>
                 <div>
-                  <h1 className="text-7xl font-bold font-heading leading-none">CHRISTCHURCH</h1>
-                  <h2 className="text-2xl text-[#D4AF37] font-semibold tracking-widest uppercase pl-1">New Zealand</h2>
-                </div>
-                <div className="text-right">
-                  <div className="text-8xl font-bold font-heading leading-none flex items-baseline">
-                    {time.getHours().toString().padStart(2, '0')}
-                    <span className={showColon ? 'opacity-100' : 'opacity-0'}>:</span>
-                    {time.getMinutes().toString().padStart(2, '0')}
-                    <span className="text-4xl text-yellow-500 ml-4">{time.getHours() >= 12 ? 'PM' : 'AM'}</span>
+                  <div className="flex items-baseline">
+                    <span className="text-[12rem] font-bold font-heading leading-none">{Math.round(current.temperature)}</span>
+                    <span className="text-7xl font-light text-[#D4AF37] ml-2">°C</span>
                   </div>
-                  <div className="text-2xl text-gray-300 mt-2">{time.toLocaleDateString('en-NZ', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
-                </div>
-              </header>
-
-              <main className="flex-1 flex flex-col justify-center items-center">
-                <div className="flex items-center gap-12 animate-scale-in">
-                  <div className="w-56 h-56 drop-shadow-2xl">
-                    <WeatherIcon code={current.weatherCode} isDay={current.isDay} className="w-full h-full" />
-                  </div>
-                  <div>
-                    <div className="flex items-baseline">
-                      <span className="text-[12rem] font-bold font-heading leading-none">{Math.round(current.temperature)}</span>
-                      <span className="text-7xl font-light text-[#D4AF37] ml-2">°C</span>
-                    </div>
-                    <div className="text-5xl font-medium tracking-wide">{getWeatherDescription(current.weatherCode)}</div>
-                    <div className="text-3xl text-[#D4AF37] mt-4 font-medium uppercase tracking-widest">
-                      H: {Math.round(daily.temperature_2m_max[0])}° | L: {Math.round(daily.temperature_2m_min[0])}°
-                    </div>
+                  <div className="text-5xl font-medium tracking-wide">{getWeatherDescription(current.weatherCode)}</div>
+                  <div className="text-3xl text-[#D4AF37] mt-4 font-medium uppercase tracking-widest">
+                    H: {Math.round(daily.temperature_2m_max[0])}° | L: {Math.round(daily.temperature_2m_min[0])}°
                   </div>
                 </div>
+              </div>
 
-                <div className="grid grid-cols-4 gap-8 w-full mt-16">
-                  {[
-                    { label: 'Sunrise', icon: <Sunrise size={48} />, val: new Date(daily.sunrise[0]).toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit' }) },
-                    { label: 'Wind', icon: <Wind size={48} />, val: `${Math.round(current.windSpeed)} km/h` },
-                    { label: 'Rainfall', icon: <CloudRain size={48} />, val: `${current.precipitation} mm` },
-                    { label: 'Sunset', icon: <SunsetIcon size={48} />, val: new Date(daily.sunset[0]).toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit' }) }
-                  ].map((item, i) => (
-                    <div key={i} className="bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] flex flex-col items-center animate-fade-in-up" style={{ animationDelay: `${400 + i * 100}ms` }}>
-                      <div className="text-[#D4AF37] mb-4">{item.icon}</div>
-                      <div className="text-gray-400 uppercase tracking-widest font-bold mb-2">{item.label}</div>
-                      <div className="text-4xl font-heading font-bold">{item.val}</div>
-                    </div>
-                  ))}
-                </div>
-              </main>
+              <div className="grid grid-cols-4 gap-8 w-full mt-16">
+                {[
+                  { label: 'Sunrise', icon: <Sunrise size={48} />, val: new Date(daily.sunrise[0]).toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit' }) },
+                  { label: 'Wind', icon: <Wind size={48} />, val: `${Math.round(current.windSpeed)} km/h` },
+                  { label: 'Rainfall', icon: <CloudRain size={48} />, val: `${current.precipitation} mm` },
+                  { label: 'Sunset', icon: <SunsetIcon size={48} />, val: new Date(daily.sunset[0]).toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit' }) }
+                ].map((item, i) => (
+                  <div key={i} className="bg-black/40 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] flex flex-col items-center animate-fade-in-up" style={{ animationDelay: `${400 + i * 100}ms` }}>
+                    <div className="text-[#D4AF37] mb-4">{item.icon}</div>
+                    <div className="text-gray-400 uppercase tracking-widest font-bold mb-2">{item.label}</div>
+                    <div className="text-4xl font-heading font-bold">{item.val}</div>
+                  </div>
+                ))}
+              </div>
+            </main>
 
-              <footer className="w-full bg-black/60 backdrop-blur-2xl border-t border-white/10 -mx-12 px-12 py-6 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
-                <div className="flex justify-between divide-x divide-white/10">
-                  {daily.time.slice(1, 8).map((d, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center">
-                      <span className="text-xl font-bold uppercase text-gray-400">{new Date(d).toLocaleDateString('en-NZ', { weekday: 'short' })}</span>
-                      <div className="w-16 h-16 my-2">
-                        <WeatherIcon code={daily.weather_code[i+1]} isDay={true} className="w-full h-full" />
-                      </div>
-                      <div className="text-2xl font-heading font-bold">
-                        {Math.round(daily.temperature_2m_max[i+1])}° <span className="text-gray-500 ml-1 font-light">{Math.round(daily.temperature_2m_min[i+1])}°</span>
-                      </div>
+            <footer className="w-full bg-black/60 backdrop-blur-2xl border-t border-white/10 -mx-12 px-12 py-6 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
+              <div className="flex justify-between divide-x divide-white/10">
+                {daily.time.slice(1, 8).map((d, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center">
+                    <span className="text-xl font-bold uppercase text-gray-400">{new Date(d).toLocaleDateString('en-NZ', { weekday: 'short' })}</span>
+                    <div className="w-16 h-16 my-2">
+                      <WeatherIcon code={daily.weather_code[i + 1]} isDay={true} className="w-full h-full" />
                     </div>
-                  ))}
-                </div>
-              </footer>
-            </div>
-            <div className="absolute bottom-0 left-0 h-2 bg-[#D4AF37] shadow-[0_0_20px_#D4AF37] animate-progress w-full" />
+                    <div className="text-2xl font-heading font-bold">
+                      {Math.round(daily.temperature_2m_max[i + 1])}° <span className="text-gray-500 ml-1 font-light">{Math.round(daily.temperature_2m_min[i + 1])}°</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </footer>
           </div>
-        );
-      };
+          <div className="absolute bottom-0 left-0 h-2 bg-[#D4AF37] shadow-[0_0_20px_#D4AF37] animate-progress w-full" />
+        </div>
+      );
+    };
 
-      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
-  </body>
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+
 </html>
