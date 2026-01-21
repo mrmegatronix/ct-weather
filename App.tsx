@@ -3,25 +3,29 @@ import { fetchWeatherData, getWeatherDescription, getMoonPhase } from './service
 import { WeatherData } from './types.ts';
 import WeatherBackground from './components/WeatherBackground.tsx';
 import Clock from './components/Clock.tsx';
-import { getWeatherIcon, SunIcon, MoonIcon, RainIcon, CloudIcon, UVIcon, SunriseIcon, SunsetIcon } from './components/WeatherIcons.tsx';
+import { getWeatherIcon, SunIcon, MoonIcon, RainIcon, CloudIcon, UVIcon, SunriseIcon, SunsetIcon, NavigationIcon } from './components/WeatherIcons.tsx';
 import { REFRESH_INTERVAL_MS } from './constants.ts';
-import { Navigation } from 'lucide-react';
 
 const App: React.FC = () => {
   const [data, setData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showTotalRain, setShowTotalRain] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const loadData = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const weather = await fetchWeatherData();
       setData(weather);
       setLastUpdated(new Date());
+    } catch (err) {
+      console.error("Failed to load weather data", err);
+      setError("SYSTEM OFFLINE");
+    } finally {
       setLoading(false);
-    } catch (error) {
-      console.error("Failed to load weather data", error);
     }
   };
 
@@ -50,9 +54,23 @@ const App: React.FC = () => {
     return directions[index];
   };
 
-  if (loading || !data) {
+  if (loading && !data) {
     return <div className="h-screen w-screen flex items-center justify-center bg-black text-[#D4AF37] font-heading text-6xl animate-pulse">LOADING SYSTEM...</div>;
   }
+
+  if (error && !data) {
+    return (
+        <div className="h-screen w-screen flex flex-col items-center justify-center bg-black text-red-500 font-heading">
+            <div className="text-6xl mb-4">⚠</div>
+            <div className="text-4xl tracking-widest">{error}</div>
+            <button onClick={loadData} className="mt-8 border border-[#D4AF37] text-[#D4AF37] px-6 py-2 text-xl hover:bg-[#D4AF37] hover:text-black transition-colors">
+                RETRY CONNECTION
+            </button>
+        </div>
+    );
+  }
+
+  if (!data) return null;
 
   const { current, daily } = data;
   const todayMax = daily.temperatureMax[0];
@@ -120,15 +138,16 @@ const App: React.FC = () => {
           <header className="flex justify-between items-start w-full mb-2 shrink-0">
             {/* Location Container - Width constrained by the Title */}
             <div className="flex flex-col w-max">
-              {/* Reduced font size to 6.5rem to prevent clipping */}
-              <h1 className="text-[6.5rem] font-bold font-heading text-white tracking-tighter leading-none drop-shadow-2xl whitespace-nowrap">
-                CHRISTCHURCH
-              </h1>
-              {/* Subtitle - Spread evenly to match width, with thick gold separator */}
+              {/* Main Title - Matches Clock Structure */}
+              <div className="flex items-baseline justify-start leading-none font-bold font-heading text-white drop-shadow-2xl whitespace-nowrap">
+                <span className="text-[6.5rem] tracking-tighter">CHRISTCHURCH</span>
+              </div>
+              
+              {/* Subtitle - Matches Clock Date Row */}
               <div className="w-full border-t-4 border-[#D4AF37] mt-2 pt-2">
-                  <div className="flex justify-between w-full">
+                  <div className="flex justify-between items-center w-full">
                     {subTitleChars.map((char, i) => (
-                    <span key={i} className="text-2xl text-[#D4AF37] font-bold drop-shadow-lg">
+                    <span key={i} className="text-2xl text-[#D4AF37] font-bold drop-shadow-md">
                         {char === ' ' ? '\u00A0' : char}
                     </span>
                     ))}
@@ -207,7 +226,7 @@ const App: React.FC = () => {
                     <div className="animate-float"> 
                         <div className="flex flex-col items-center">
                              <div className="flex items-center gap-3">
-                                <Navigation 
+                                <NavigationIcon 
                                     size={48} 
                                     className="text-[#D4AF37] drop-shadow-lg" 
                                     style={{ transform: `rotate(${current.windDirection}deg)` }} 

@@ -4,6 +4,12 @@ interface IconProps {
   className?: string;
 }
 
+interface NavigationIconProps extends IconProps {
+  size?: number | string;
+  style?: React.CSSProperties;
+  fill?: string;
+}
+
 // Reusable Gradients Definition
 const IconGradients = () => (
   <defs>
@@ -209,6 +215,23 @@ export const ThunderIcon: React.FC<IconProps> = ({ className }) => (
       stroke="#fff"
       strokeWidth="1"
     />
+  </svg>
+);
+
+export const NavigationIcon: React.FC<NavigationIconProps> = ({ size = 24, className, style, fill }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className} 
+    style={style}
+  >
+    <polygon points="3 11 22 2 13 21 11 13 3 11" fill={fill} stroke={fill} />
   </svg>
 );
 

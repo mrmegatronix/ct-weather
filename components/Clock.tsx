@@ -19,10 +19,9 @@ const Clock: React.FC<ClockProps> = ({ time }) => {
   const dateChars = dateStr.split('');
 
   return (
-    <div className="inline-flex flex-col items-end w-max">
+    <div className="flex flex-col items-end w-max">
       {/* Time Row - Defines the width */}
-      {/* Reduced font size to 6.5rem (approx 5% smaller than 7rem) */}
-      <div className="flex items-baseline justify-end leading-none font-bold font-heading text-white drop-shadow-xl relative">
+      <div className="flex items-baseline justify-end leading-none font-bold font-heading text-white drop-shadow-2xl relative">
         <span className="text-[6.5rem] tracking-tighter">{hours}</span>
         <span 
           className="text-[5.5rem] mx-2 -mt-4 transition-opacity duration-150 ease-in-out text-[#D4AF37]" 
