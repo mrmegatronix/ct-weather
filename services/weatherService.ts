@@ -1,5 +1,5 @@
-import { WeatherData } from '../types';
-import { CHRISTCHURCH_COORDS } from '../constants';
+import { WeatherData } from '../types.ts';
+import { CHRISTCHURCH_COORDS } from '../constants.ts';
 
 export const fetchWeatherData = async (): Promise<WeatherData> => {
   const params = new URLSearchParams({

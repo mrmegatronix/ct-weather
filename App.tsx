@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { fetchWeatherData, getWeatherDescription } from './services/weatherService';
-import { WeatherData } from './types';
-import WeatherBackground from './components/WeatherBackground';
-import Clock from './components/Clock';
-import { getWeatherIcon } from './components/WeatherIcons';
-import { REFRESH_INTERVAL_MS } from './constants';
+import { fetchWeatherData, getWeatherDescription } from './services/weatherService.ts';
+import { WeatherData } from './types.ts';
+import WeatherBackground from './components/WeatherBackground.tsx';
+import Clock from './components/Clock.tsx';
+import { getWeatherIcon } from './components/WeatherIcons.tsx';
+import { REFRESH_INTERVAL_MS } from './constants.ts';
 import { Wind, CloudRain, Sunrise, Sunset as SunsetIcon, Droplets, Navigation } from 'lucide-react';
 
 const App: React.FC = () => {
