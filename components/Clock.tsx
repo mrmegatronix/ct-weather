@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const Clock: React.FC = () => {
-  const [time, setTime] = useState(new Date());
+interface ClockProps {
+  time: Date;
+}
 
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
+const Clock: React.FC<ClockProps> = ({ time }) => {
   // Robust time formatting manually to ensure 2-digits
   let hoursRaw = time.getHours();
   const ampm = hoursRaw >= 12 ? 'PM' : 'AM';
@@ -17,6 +14,7 @@ const Clock: React.FC = () => {
   
   const minutes = time.getMinutes().toString().padStart(2, '0');
   
+  // Colon visibility is now derived from the passed time prop, ensuring sync with other colons
   const showColon = time.getSeconds() % 2 === 0;
 
   return (

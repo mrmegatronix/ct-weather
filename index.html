@@ -61,6 +61,21 @@
         from { width: 0%; }
         to { width: 100%; }
       }
+      
+      /* New Entrance Animations */
+      @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
       .animate-spin-slow {
         animation: spin-slow 12s linear infinite;
         transform-origin: center;
@@ -80,6 +95,22 @@
       .animate-progress {
         animation: progress 60s linear infinite;
       }
+
+      /* Utility classes for entrances */
+      .animate-fade-in-down {
+        animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+      .animate-scale-in {
+        animation: scaleIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+      
+      /* Ensure elements are hidden before animation starts */
+      .opacity-0-start {
+        opacity: 0;
+      }
     </style>
   <script type="importmap">
 {
@@ -94,5 +125,6 @@
 </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
