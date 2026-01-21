@@ -5,9 +5,10 @@ interface WeatherBackgroundProps {
   isDay: boolean;
   sunrise?: string;
   sunset?: string;
+  precipitation?: number;
 }
 
-const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDay, sunrise, sunset }) => {
+const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDay, sunrise, sunset, precipitation = 0 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -34,22 +35,24 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
     resize();
 
     // Determine type of effect
-    const isRain = (weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82);
+    const isRainCode = (weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82);
+    // Force rain if precipitation is recorded, even if code is Cloudy
+    const isRain = isRainCode || (precipitation > 0 && weatherCode < 70); 
+    
     const isSnow = (weatherCode >= 71 && weatherCode <= 77) || (weatherCode >= 85 && weatherCode <= 86);
     const isCloudy = weatherCode === 2 || weatherCode === 3 || weatherCode === 45;
-    const isClearNight = !isDay && (weatherCode === 0 || weatherCode === 1);
-
+    
     // Init Weather Particles
     const initParticles = () => {
       particles = [];
-      const particleCount = isRain ? 800 : isSnow ? 400 : 0;
+      const particleCount = isRain ? 1200 : isSnow ? 400 : 0;
       
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          speed: Math.random() * 5 + 2,
-          length: Math.random() * 20 + 10,
+          speed: Math.random() * 5 + 2, // Base speed
+          length: Math.random() * 30 + 15, // Longer trails for rain
           opacity: Math.random() * 0.5 + 0.1,
           size: Math.random() * 3,
         });
@@ -59,13 +62,13 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
     // Init Stars (only for night)
     const initStars = () => {
         stars = [];
-        if (!isDay) {
+        if (!isDay && !isRain && !isSnow && !isCloudy) { 
             for(let i = 0; i < 200; i++) {
                 stars.push({
                     x: Math.random() * width,
-                    y: Math.random() * height * 0.7, // Keep stars mostly in upper sky
-                    size: Math.random() * 2 + 0.5,
-                    opacity: Math.random(),
+                    y: Math.random() * height * 0.85, // Stars stay above horizon roughly 
+                    size: Math.random() * 1.2 + 0.1, 
+                    opacity: Math.random() * 0.5 + 0.1,
                     twinkleSpeed: Math.random() * 0.02 + 0.005
                 });
             }
@@ -82,43 +85,40 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
        const sunriseTime = new Date(sunrise).getTime();
        const sunsetTime = new Date(sunset).getTime();
        
-       let percent = 0; // 0 = Left (Start), 1 = Right (End)
+       let percent = 0; 
        
        if (isDay) {
-         // Day: 0% at sunrise, 100% at sunset
          percent = (now - sunriseTime) / (sunsetTime - sunriseTime);
        } else {
-         // Night Logic
          const msInDay = 86400000;
          if (now > sunsetTime) {
-             // Evening Night: sunset (0%) to midnight
              const progressIntoNight = now - sunsetTime;
-             // Assume night is approx 12 hours for visual placement
              percent = progressIntoNight / (msInDay / 2); 
          } else {
-             // Morning Night: midnight to sunrise (100%)
              const timeUntilSunrise = sunriseTime - now;
              percent = 1 - (timeUntilSunrise / (msInDay / 2));
          }
        }
 
-       // Clamp and buffer
-       // We want the sun/moon to travel from say 10% width to 90% width
-       // So map percent 0..1 to 0.1..0.9
-       const renderPercent = 0.1 + (Math.max(0, Math.min(1, percent)) * 0.8);
+       const safePercent = Math.max(0, Math.min(1, percent));
+       
+       // TRAJECTORY LOGIC:
+       // Rise on RIGHT (width), Set on LEFT (0)
+       const x = width * (1 - safePercent); 
 
-       const x = width * renderPercent;
-       // Arc: High noon is highest (lowest Y value)
-       // Use sine wave based on percent (0 to 1 -> 0 to PI)
-       const y = (height * 0.6) - Math.sin(Math.max(0, Math.min(1, percent)) * Math.PI) * (height * 0.4);
+       // Horizon Logic:
+       // Horizon is top of footer. Footer is approx 15% of screen height at bottom.
+       // So Horizon Y is approx 0.85 * height.
+       const horizonY = height * 0.85;
+       const zenithY = height * 0.15; // Peak height in sky
+       
+       // Parabolic arc
+       const y = horizonY - Math.sin(safePercent * Math.PI) * (horizonY - zenithY);
 
        ctx.save();
        
        if (isDay) {
-          // NEST HUB STYLE SUN: Soft, glowing, large
           const sunRadius = 70;
-          
-          // Large ambient glow
           const glow = ctx.createRadialGradient(x, y, sunRadius, x, y, sunRadius * 6);
           glow.addColorStop(0, 'rgba(255, 200, 50, 0.4)');
           glow.addColorStop(0.5, 'rgba(255, 150, 50, 0.1)');
@@ -128,7 +128,6 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
           ctx.arc(x, y, sunRadius * 6, 0, Math.PI * 2);
           ctx.fill();
 
-          // Core Sun
           const core = ctx.createRadialGradient(x, y, 0, x, y, sunRadius);
           core.addColorStop(0, '#FFFFFF');
           core.addColorStop(0.3, '#FFFACD');
@@ -140,10 +139,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
           ctx.arc(x, y, sunRadius, 0, Math.PI * 2);
           ctx.fill();
        } else {
-          // NEST HUB STYLE MOON: Crisp, soft glow
           const moonRadius = 50;
-          
-          // Moon Glow
           const glow = ctx.createRadialGradient(x, y, moonRadius, x, y, moonRadius * 4);
           glow.addColorStop(0, 'rgba(200, 220, 255, 0.2)');
           glow.addColorStop(1, 'rgba(200, 220, 255, 0)');
@@ -152,7 +148,6 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
           ctx.arc(x, y, moonRadius * 4, 0, Math.PI * 2);
           ctx.fill();
 
-          // Moon Body
           ctx.fillStyle = '#F0F4F8';
           ctx.shadowColor = '#FFFFFF';
           ctx.shadowBlur = 20;
@@ -168,20 +163,17 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
         
         if (isDay) {
             if (isCloudy || isRain) {
-                // Stormy Grey/Blue
                 gradient.addColorStop(0, '#3a4b5c');
                 gradient.addColorStop(1, '#6a7b8c');
             } else {
-                // Google Nest Hub Day: Rich Blue to Cyan/Orange
-                gradient.addColorStop(0, '#1565C0'); // Deep Blue top
-                gradient.addColorStop(0.5, '#42A5F5'); // Mid Blue
-                gradient.addColorStop(1, '#90CAF9'); // Light Blue horizon
+                gradient.addColorStop(0, '#1565C0'); 
+                gradient.addColorStop(0.5, '#42A5F5'); 
+                gradient.addColorStop(1, '#90CAF9'); 
             }
         } else {
-             // Google Nest Hub Night: Deep Indigo to Purple/Black
-            gradient.addColorStop(0, '#0D1117'); // Almost black top
-            gradient.addColorStop(0.4, '#1A237E'); // Deep Indigo
-            gradient.addColorStop(1, '#311B92'); // Deep Purple horizon
+            gradient.addColorStop(0, '#0D1117'); 
+            gradient.addColorStop(0.4, '#1A237E'); 
+            gradient.addColorStop(1, '#311B92'); 
         }
         
         ctx.fillStyle = gradient;
@@ -211,7 +203,8 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
                 ctx.lineTo(p.x, p.y + p.length);
                 ctx.stroke();
                 
-                p.y += p.speed * 4;
+                // RESTORED TO REALISTIC SPEED (approx 1.5x - 2x base speed)
+                p.y += p.speed * 2; 
                 if (p.y > height) p.y = -p.length;
             } else if (isSnow) {
                 ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
@@ -229,9 +222,9 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
       ctx.clearRect(0, 0, width, height);
       
       drawBackground();
-      drawStars(); // Stars behind sun/moon or just generally in background
+      drawStars(); 
       drawCelestialBody();
-      drawParticles(); // Weather on top
+      drawParticles(); 
 
       animationFrameId = requestAnimationFrame(draw);
     };
@@ -242,7 +235,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({ weatherCode, isDa
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [weatherCode, isDay, sunrise, sunset]);
+  }, [weatherCode, isDay, sunrise, sunset, precipitation]);
 
   return (
     <canvas 

@@ -25,9 +25,12 @@ export const fetchWeatherData = async (): Promise<WeatherData> => {
       'uv_index_max',
       'rain_sum'
     ].join(','),
-    hourly: 'temperature_2m',
+    hourly: [
+      'temperature_2m',
+      'uv_index'
+    ].join(','),
     timezone: 'Pacific/Auckland',
-    forecast_days: '8' // 1 current + 7 future
+    forecast_days: '8'
   });
 
   const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
@@ -38,6 +41,17 @@ export const fetchWeatherData = async (): Promise<WeatherData> => {
   }
 
   const data = await response.json();
+  
+  // Get current hour index for UV
+  const currentHour = new Date().getHours();
+  const currentUV = data.hourly.uv_index[currentHour] || 0;
+
+  // Calculate Daily Peak UV (First 24 hours)
+  // Open-Meteo returns hourly data starting from 00:00 of the requested day
+  const uvToday = data.hourly.uv_index.slice(0, 24);
+  const maxUV = Math.max(...uvToday);
+  const maxUVIndex = uvToday.indexOf(maxUV);
+  const maxUVTimeStr = data.hourly.time[maxUVIndex];
 
   return {
     current: {
@@ -50,6 +64,11 @@ export const fetchWeatherData = async (): Promise<WeatherData> => {
       humidity: data.current.relative_humidity_2m,
       apparentTemperature: data.current.apparent_temperature,
       precipitation: data.current.precipitation,
+      uvIndex: currentUV, 
+      uvPeak: {
+        value: maxUV,
+        time: maxUVTimeStr
+      }
     },
     daily: {
       time: data.daily.time,
@@ -87,5 +106,46 @@ export const getWeatherDescription = (code: number): string => {
     case 95: return 'Thunderstorm';
     case 96: case 99: return 'Thunderstorm & Hail';
     default: return 'Unknown';
+  }
+};
+
+export const getMoonPhase = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  let c = 0;
+  let e = 0;
+  let jd = 0;
+  let b = 0;
+
+  let y = year;
+  let m = month;
+
+  if (month < 3) {
+    y--;
+    m += 12;
+  }
+
+  ++m;
+  c = 365.25 * y;
+  e = 30.6 * m;
+  jd = c + e + day - 694039.09; 
+  jd /= 29.5305882; 
+  b = parseInt(jd.toString()); 
+  jd -= b; 
+  b = Math.round(jd * 8); 
+
+  if (b >= 8) b = 0; 
+
+  switch (b) {
+    case 0: return 'New Moon';
+    case 1: return 'Waxing Crescent';
+    case 2: return 'First Quarter';
+    case 3: return 'Waxing Gibbous';
+    case 4: return 'Full Moon';
+    case 5: return 'Waning Gibbous';
+    case 6: return 'Last Quarter';
+    case 7: return 'Waning Crescent';
+    default: return 'New Moon';
   }
 };

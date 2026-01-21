@@ -8,6 +8,11 @@ export interface CurrentWeather {
   humidity: number;
   apparentTemperature: number;
   precipitation: number;
+  uvIndex?: number;
+  uvPeak?: {
+    value: number;
+    time: string;
+  };
 }
 
 export interface DailyForecast {
@@ -27,6 +32,7 @@ export interface WeatherData {
   hourly: {
     temperature_2m: number[];
     time: string[];
+    uv_index: number[];
   };
   dailyUnits: {
     temperatureMax: string;
